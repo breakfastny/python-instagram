@@ -181,6 +181,9 @@ def bind_method(**config):
                                                                                  self.path,
                                                                                  self.parameters,
                                                                                  include_secret=self.include_secret)
+            if self.api.hit_func:
+                self.api.hit_func()
+
             if self.with_next_url:
                 return self._get_with_next_url(self.with_next_url, method, body, headers)
             if self.as_generator:

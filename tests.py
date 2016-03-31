@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import types
 import six
 try:
@@ -61,6 +62,25 @@ class TestInstagramAPI(client.InstagramAPI):
         if isinstance(actual_val, types.MethodType):
             active_call = attr
         return actual_val
+
+class InstagramHitTests(unittest.TestCase):
+    def test_hit(self):
+        got_hit = []
+        def x():
+            got_hit.append('HIT!')
+
+        api = TestInstagramAPI(access_token=access_token, hit_func=x)
+        api.media_popular()
+        count = 0
+        while count < 10:
+            count += 1
+            if len(got_hit):
+                break
+            time.sleep(0.1)
+        assert len(got_hit) == 1
+
+    def test_invalid(self):
+        self.assertRaises(Exception, TestInstagramAPI, hit_func=3)
 
 class InstagramAuthTests(unittest.TestCase):
     def setUp(self):

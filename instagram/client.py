@@ -19,6 +19,7 @@ class InstagramAPI(oauth2.OAuth2API):
     api_name = "Instagram"
     x_ratelimit_remaining  = None
     x_ratelimit = None
+    hit_func = None  # Callable to be invoked before performing an API request.
 
     def __init__(self, *args, **kwargs):
         format = kwargs.get('format', 'json')
@@ -26,6 +27,9 @@ class InstagramAPI(oauth2.OAuth2API):
             self.format = format
         else:
             raise Exception("Unsupported format")
+        if 'hit_func' in kwargs and not callable(kwargs['hit_func']):
+            raise Exception("hit_func must be callable")
+        self.hit_func = kwargs.pop('hit_func', None)
         super(InstagramAPI, self).__init__(**kwargs)
 
     media_popular = bind_method(
