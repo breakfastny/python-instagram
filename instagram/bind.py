@@ -12,8 +12,7 @@ re_path_template = re.compile('{\w+}')
 
 
 def encode_string(value):
-    return value.encode('utf-8') \
-        if isinstance(value, six.text_type) else str(value)
+    return value if isinstance(value, six.text_type) else str(value)
 
 
 class InstagramClientError(Exception):
@@ -95,7 +94,7 @@ def bind_method(**config):
                 name = variable.strip('{}')
 
                 try:
-                    value = quote(self.parameters[name])
+                    value = self.parameters[name]
                 except KeyError:
                     raise Exception('No parameter value found for path variable: %s' % name)
                 del self.parameters[name]
